@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <title>Kakulator</title>
+  <style>
+    button {
+      border: none;
+      height: 63px;
+      width: 72px;
+      padding: 15px 32px;
+      margin: 1px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 25px;
+    }
+    #display {
+      border: none;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 25px;
+    }
+  </style>
+</head>
+<body>
+<div id="display"></div>
+  <div>
+    <button onclick="writeToDisplay('1')">1</button>
+    <button onclick="writeToDisplay('2')">2</button>
+    <button onclick="writeToDisplay('3')">3</button>
+    <button onclick="writeToDisplay('+')">+</button>
+    <br/>
+    <button onclick="writeToDisplay('4')">4</button>
+    <button onclick="writeToDisplay('5')">5</button>
+    <button onclick="writeToDisplay('6')">6</button>
+    <button onclick="writeToDisplay('-')">-</button>
+    <br/>
+    <button onclick="writeToDisplay('7')">7</button>
+    <button onclick="writeToDisplay('8')">8</button>
+    <button onclick="writeToDisplay('9')">9</button>
+    <button onclick="writeToDisplay('*')">*</button>
+    <br/>
+    <button onclick="removeLast()">X</button>
+    <button onclick="writeToDisplay('0')">0</button>
+    <button onclick="kakulate()">=</button>
+    <button onclick="writeToDisplay('/')">/</button>
+  </div>
+
+<script>
+  let counter = false
+
+  function writeToDisplay(btnName) {
+      let display = document.getElementById("display")
+      display.innerHTML += btnName
+    if (counter === true) {
+      display.innerHTML = btnName
+      counter=false
+    }
+  }
+
+  function  removeLast () {
+    let display = document.getElementById("display")
+      display.innerHTML = display.innerHTML.slice(0, -1)
+  }
+
+  async function kakulate () {
+    let display = document.getElementById("display")
+
+    await fetch('/kalkulate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: display.innerHTML
+    })
+
+    let response = await fetch("/result")
+    display.innerHTML = await response.text()
+
+    counter = true
+  }
+</script>
+</body>
+</html>
